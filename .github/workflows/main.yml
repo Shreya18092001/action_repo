@@ -1,0 +1,21 @@
+name: GitHub Actions Workflow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  trigger-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Webhook
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{
+            "event_type": "${{ github.event_name }}",
+            "author": "${{ github.actor }}",
+            "to_branch": "${{ github.ref_name }}",
+            "from_branch": "${{ github.head_ref || github.ref_name }}",
+            "timestamp": "${{ github.event.head_commit.timestamp || github.event.pull_request.updated_at }}"
+          }' https://github.com/Shreya18092001/Shreya.git
